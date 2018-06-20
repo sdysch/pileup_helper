@@ -41,4 +41,6 @@ for sample in samples:
 	print cmd
 
 	os.system("mkdir -p output")
+	os.system(cmd)
 
+print "All done :)"
