@@ -1,0 +1,5 @@
+*.root
+*.txt
+.asetup.save
+PRW/
+output/
