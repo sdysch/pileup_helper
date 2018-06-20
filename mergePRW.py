@@ -26,21 +26,33 @@ options = parser.parse_args()
 samplelist = open(options.inputfile)
 samples = []
 
+# output dir
+os.system("mkdir -p output")
+
 # Get list of samples from txt file
 for line in samplelist:
 	if line.startswith("mc1"):
 		sample = line.strip("\n")
 		samples +=[sample]
 
+mergedfiles = 0
+
 # merge
 for sample in samples:
+	sample = sample.split(":")[1] # remove mc16_13TeV: scope from rucio
+	if not (os.path.isdir("PRW/" + sample)):
+		print "[WARNING]: could not locate config files for {} -- skipping".format(sample)
+		continue
 	DSID = getDSID(sample)
 	output = "output/pileup_chan" + DSID + ".root"
 	print "[INFO]: doing {}. Output file: {}".format(DSID, output)
-	cmd = "hadd " + output + " PRW/" + sample + "/*.root"
+	cmd = "hadd -f " + output + " PRW/" + sample + "/*NTUP_PILEUP*.root*"
 	print cmd
 
-	os.system("mkdir -p output")
 	os.system(cmd)
+	mergedfiles += 1
 
-print "All done :)"
+if mergedfiles == 0:
+	print "Merged no PRW files. Please check your inputs!"
+else:
+	print "Merged {} samples - all done :)".format(mergedfiles)
