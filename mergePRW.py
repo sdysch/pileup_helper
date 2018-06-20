@@ -31,9 +31,11 @@ os.system("mkdir -p output")
 
 # Get list of samples from txt file
 for line in samplelist:
-	if line.startswith("mc1"):
+	if line.startswith("mc1") and "NTUP_PILEUP" in line:
 		sample = line.strip("\n")
 		samples +=[sample]
+
+print "[INFO] found {} samples to merge".format(len(samples))
 
 mergedfiles = 0
 
